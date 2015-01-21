@@ -13,6 +13,9 @@ extern SemaphoreHandle_t xSemUSART1send;
 extern xQueueHandle xQueueUSART2Recvie;
 extern SemaphoreHandle_t xSemUSART2send;
 
+extern xQueueHandle xQueueUSART3Recvie;
+extern SemaphoreHandle_t xSemUSART3send;
+
 /* Queue structure used for passing characters. */
 typedef struct {
         char ch;
@@ -76,6 +79,33 @@ void USART2_IRQHandler()
 
             /* Queue the received byte. */
             xQueueSendToBackFromISR(xQueueUSART2Recvie, &rx_msg, &xHigherPriorityTaskWoken);  
+    }
+    if (xHigherPriorityTaskWoken) {
+            taskYIELD();
+    }
+}
+
+/* IRQ handler to handle USART3 interruptss (both transmit and receive
+* interrupts). */
+void USART3_IRQHandler()
+{
+    static signed portBASE_TYPE xHigherPriorityTaskWoken;
+    serial_ch_msg rx_msg;
+
+    /* If this interrupt is for a transmit... */
+    if (USART_GetITStatus(USART3, USART_IT_TXE) != RESET) {
+            
+        /* Diables the transmit interrupt. */
+        USART_ITConfig(USART3, USART_IT_TXE, DISABLE);
+        xSemaphoreGiveFromISR(xSemUSART3send, &xHigherPriorityTaskWoken); 
+
+    /* If this interrupt is for a receive... */
+    }else if (USART_GetITStatus(USART3, USART_IT_RXNE) != RESET) {
+            /* Receive the byte from the buffer. */
+            rx_msg.ch = USART_ReceiveData(USART3);
+
+            /* Queue the received byte. */
+            xQueueSendToBackFromISR(xQueueUSART3Recvie, &rx_msg, &xHigherPriorityTaskWoken);  
     }
     if (xHigherPriorityTaskWoken) {
             taskYIELD();

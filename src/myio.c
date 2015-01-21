@@ -3,6 +3,7 @@
 
 extern SemaphoreHandle_t xSemUSART1send;
 extern SemaphoreHandle_t xSemUSART2send;
+extern SemaphoreHandle_t xSemUSART3send;
 
 void _print(char *str, SemaphoreHandle_t SemUSART){
     
@@ -13,7 +14,12 @@ void _print(char *str, SemaphoreHandle_t SemUSART){
         whichUSART = USART1;            
     }else if(SemUSART == xSemUSART2send){
         whichUSART = USART2;
+    }else if(SemUSART == xSemUSART3send){
+        whichUSART = USART3;
+    }else{
+        whichUSART = USART1;
     }
+
 
     while( xSemaphoreTake(SemUSART,  portMAX_DELAY) == pdFALSE);
 

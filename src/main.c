@@ -17,6 +17,9 @@ SemaphoreHandle_t xSemUSART1send;
 xQueueHandle xQueueUSART2Recvie;
 SemaphoreHandle_t xSemUSART2send;
 
+xQueueHandle xQueueUSART3Recvie;
+SemaphoreHandle_t xSemUSART3send;
+
 /* Queue structure used for passing messages. */
 typedef struct {
 	char str[50];
@@ -35,14 +38,15 @@ char receive_byte()
 	serial_ch_msg msg;
 
 	/* Wait for a byte to be queued by the receive interrupts handler. */
-	while (xQueueReceive(xQueueUART1Recvie, &msg, 0) == pdFALSE);
+	//while (xQueueReceive(xQueueUART1Recvie, &msg, 0) == pdFALSE);
+	while (xQueueReceive(xQueueUSART2Recvie, &msg, 0) == pdFALSE);
 	return msg.ch;
 }
 
 void vUsartInputResponse(void *pvParameters)
 {
 	while(1){
-		uprintf("%c", receive_byte());
+		qprintf(xSemUSART2send, "%c", receive_byte());
 	}
 }
 
@@ -53,8 +57,9 @@ void vATask(void *pvParameters)
 	while(1){
 		vTaskDelay(1000);
 		uprintf("\nTask %c running\n", who);	
-		qprintf(xSemUSART2send, "USART2> %s\n", A);
-		//USART_SendData(USART2, 'A');
+		qprintf(xSemUSART2send, "\nUSART2> %s\n", A);
+		qprintf(xSemUSART3send, "\nUSART3->2> %s\n", A);
+		//USART_SendData(USART3, 'A');
 	}
 }
 
@@ -75,9 +80,14 @@ int main(void)
 	xSemUSART1send = xSemaphoreCreateBinary();
 
 	/*a queue for tansfer the senddate to USART2 task*/
-	xQueueUSART2Recvie = xQueueCreate(15, sizeof(serial_ch_msg));
+	xQueueUSART2Recvie = xQueueCreate(150, sizeof(serial_ch_msg));
     /*for UASRT2 Tx usage token*/
 	xSemUSART2send = xSemaphoreCreateBinary();
+
+	/*a queue for tansfer the senddate to USART2 task*/
+	xQueueUSART3Recvie = xQueueCreate(15, sizeof(serial_ch_msg));
+    /*for UASRT2 Tx usage token*/
+	xSemUSART3send = xSemaphoreCreateBinary();
 
 	/* initialize USART hardware... */
 	prvSetupHardware();
