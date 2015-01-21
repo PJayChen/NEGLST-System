@@ -96,8 +96,6 @@ void USART2_Configuration(void)
 	//Configuring And Enabling USART2
 	USART_Init(USART2, &USART_InitStructure);
 
-#if 0
-	
 	/* Enable transmit and receive interrupts for the USART2. */
 	USART_ITConfig(USART2, USART_IT_TXE, ENABLE);
 	USART_ITConfig(USART2, USART_IT_RXNE, ENABLE);  
@@ -114,7 +112,7 @@ void USART2_Configuration(void)
 	NVIC_InitStructure.NVIC_IRQChannelSubPriority = 0;
 	NVIC_InitStructure.NVIC_IRQChannelCmd = ENABLE;
 	NVIC_Init(&NVIC_InitStructure);
-#endif
+
 	USART_Cmd(USART2, ENABLE);
 }
 

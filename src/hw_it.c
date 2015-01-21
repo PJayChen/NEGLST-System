@@ -66,8 +66,8 @@ void USART2_IRQHandler()
     if (USART_GetITStatus(USART2, USART_IT_TXE) != RESET) {
             
         /* Diables the transmit interrupt. */
-        //USART_ITConfig(USART2, USART_IT_TXE, DISABLE);
-        //xSemaphoreGiveFromISR(xSemUSART2send, &xHigherPriorityTaskWoken); 
+        USART_ITConfig(USART2, USART_IT_TXE, DISABLE);
+        xSemaphoreGiveFromISR(xSemUSART2send, &xHigherPriorityTaskWoken); 
 
     /* If this interrupt is for a receive... */
     }else if (USART_GetITStatus(USART2, USART_IT_RXNE) != RESET) {
