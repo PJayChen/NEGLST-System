@@ -85,6 +85,10 @@ OBJS += $(SOURCE)/hw_it.o \
 OBJS += $(SOURCE)/myio.o \
 	$(SOURCE)/String.o 
 
+#CLI(Shell)
+OBJS += $(SOURCE)/shell.o \
+	$(SOURCE)/FreeRTOS_CLI.o
+
 # STARTUP FILE
 OBJS += $(CMSIS)/Device/startup_stm32f4xx.o
 #OBJS += $(SOURCE)/startup_stm32f429_439xx.o

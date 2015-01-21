@@ -5,7 +5,25 @@ extern SemaphoreHandle_t xSemUSART1send;
 extern SemaphoreHandle_t xSemUSART2send;
 extern SemaphoreHandle_t xSemUSART3send;
 
-void _print(char *str, SemaphoreHandle_t SemUSART){
+extern xQueueHandle xQueueUART1Recvie;
+extern xQueueHandle xQueueUSART2Recvie;
+extern xQueueHandle xQueueUSART3Recvie;
+
+/* USART1 receive data queue */
+extern xQueueHandle xQueueUART1Recvie;
+
+/*
+ * The function that reads a char from queue
+ */
+BaseType_t vSerialGetChar(xQueueHandle xQueueH, char *cReadChar, TickType_t xTicksToWait)
+{
+    while (xQueueReceive(xQueueH, cReadChar, xTicksToWait) == pdFALSE);
+
+    return pdPASS;
+}
+
+void _print(char *str, SemaphoreHandle_t SemUSART)
+{
     
     USART_TypeDef * whichUSART;
 
@@ -43,7 +61,7 @@ void qprintf(SemaphoreHandle_t SemWhichUSART, const char *format, ...){
     char percentage[] = "%";
     char *str;
     char str_num[10];
-    char str_out[30] = "";
+    char str_out[100] = "";
     int nCnt = 0;
 
     while( format[curr_ch] != '\0' ){
@@ -116,7 +134,7 @@ void uprintf(const char *format, ...){
     char percentage[] = "%";
     char *str;
     char str_num[10];
-    char str_out[30] = "";
+    char str_out[100] = "";
     int nCnt = 0;
 
     while( format[curr_ch] != '\0' ){
@@ -164,9 +182,7 @@ void uprintf(const char *format, ...){
             //prevent str_out is no more space
             nCnt = sizeof(str_out) - strlen(str_out);
             strncat(str_out, newLine, nCnt - 1);
-            
-        }else{
-            
+        }else{            
             out_ch[0] = format[curr_ch];
             
             //prevent str_out is no more space

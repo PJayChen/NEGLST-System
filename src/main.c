@@ -10,6 +10,10 @@
 #include "hw_conf.h"
 #include "myio.h"
 
+#include "shell.h"
+
+/*--------------------------------------------------------- */
+
 /* semaphores, queues declarations */
 xQueueHandle xQueueUART1Recvie;
 SemaphoreHandle_t xSemUSART1send;
@@ -56,7 +60,7 @@ void vATask(void *pvParameters)
 	char who = 'A';
 	while(1){
 		vTaskDelay(1000);
-		uprintf("\nTask %c running\n", who);	
+		//uprintf("\nTask %c running\n", who);	
 		qprintf(xSemUSART2send, "\nUSART2> %s\n", A);
 		qprintf(xSemUSART3send, "\nUSART3->2> %s\n", A);
 		//USART_SendData(USART3, 'A');
@@ -68,7 +72,9 @@ void vBTask(void *pvParameters)
 	char A[] = "Task B running... ";
 	while(1){
 		vTaskDelay(1000);
-		uprintf("\n%s\n", A);	
+		qprintf(xSemUSART2send, "\nUSART2> %s\n", A);
+		qprintf(xSemUSART3send, "\nUSART3->2> %s\n", A);
+		//uprintf("\n%s\n", A);	
 	}
 }
 
@@ -96,7 +102,7 @@ int main(void)
 	xTaskCreate( vATask, "send", configMINIMAL_STACK_SIZE, NULL, tskIDLE_PRIORITY, NULL);
 	xTaskCreate( vBTask, "send", configMINIMAL_STACK_SIZE, NULL, tskIDLE_PRIORITY, NULL);
 	xTaskCreate( vUsartInputResponse, "vUsartInputResponse", configMINIMAL_STACK_SIZE, NULL, tskIDLE_PRIORITY, NULL);	
-
+	vUARTCommandConsoleStart( configMINIMAL_STACK_SIZE, tskIDLE_PRIORITY);
 
 	vTaskStartScheduler();
 	while(1);
