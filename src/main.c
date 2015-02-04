@@ -34,49 +34,10 @@ typedef struct {
 } serial_ch_msg;
 
 /*Private variables ---------------------------------------*/
-//SD_Error Status = SD_OK;
+
 
 /* Private functions ---------------------------------------------------------*/
-char receive_byte()
-{
-	serial_ch_msg msg;
 
-	/* Wait for a byte to be queued by the receive interrupts handler. */
-	//while (xQueueReceive(xQueueUART1Recvie, &msg, 0) == pdFALSE);
-	while (xQueueReceive(xQueueUSART2Recvie, &msg, 0) == pdFALSE);
-	return msg.ch;
-}
-
-void vUsartInputResponse(void *pvParameters)
-{
-	while(1){
-		qprintf(xSemUSART2send, "%c", receive_byte());
-	}
-}
-
-void vATask(void *pvParameters)
-{	
-	char A[] = "Task A running... ";
-	char who = 'A';
-	while(1){
-		vTaskDelay(1000);
-		//uprintf("\nTask %c running\n", who);	
-		qprintf(xSemUSART2send, "\nUSART2> %s\n", A);
-		qprintf(xSemUSART3send, "\nUSART3->2> %s\n", A);
-		//USART_SendData(USART3, 'A');
-	}
-}
-
-void vBTask(void *pvParameters)
-{
-	char A[] = "Task B running... ";
-	while(1){
-		vTaskDelay(1000);
-		qprintf(xSemUSART2send, "\nUSART2> %s\n", A);
-		qprintf(xSemUSART3send, "\nUSART3->2> %s\n", A);
-		//uprintf("\n%s\n", A);	
-	}
-}
 
 int main(void)
 {
@@ -86,7 +47,7 @@ int main(void)
 	xSemUSART1send = xSemaphoreCreateBinary();
 
 	/*a queue for tansfer the senddate to USART2 task*/
-	xQueueUSART2Recvie = xQueueCreate(150, sizeof(serial_ch_msg));
+	xQueueUSART2Recvie = xQueueCreate(500, sizeof(serial_ch_msg));
     /*for UASRT2 Tx usage token*/
 	xSemUSART2send = xSemaphoreCreateBinary();
 
@@ -98,10 +59,7 @@ int main(void)
 	/* initialize USART hardware... */
 	prvSetupHardware();
 	_print("USART initialize finish...\n\r", xSemUSART1send);
-
-	xTaskCreate( vATask, "send", configMINIMAL_STACK_SIZE, NULL, tskIDLE_PRIORITY, NULL);
-	xTaskCreate( vBTask, "send", configMINIMAL_STACK_SIZE, NULL, tskIDLE_PRIORITY, NULL);
-	xTaskCreate( vUsartInputResponse, "vUsartInputResponse", configMINIMAL_STACK_SIZE, NULL, tskIDLE_PRIORITY, NULL);	
+	
 	vUARTCommandConsoleStart( configMINIMAL_STACK_SIZE, tskIDLE_PRIORITY);
 
 	vTaskStartScheduler();
