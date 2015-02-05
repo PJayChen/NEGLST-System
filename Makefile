@@ -87,7 +87,11 @@ OBJS += $(SOURCE)/myio.o \
 
 #CLI(Shell)
 OBJS += $(SOURCE)/shell.o \
-	$(SOURCE)/FreeRTOS_CLI.o
+	$(SOURCE)/FreeRTOS_CLI.o \
+	$(SOURCE)/ShellCommands.o
+
+#Main Tasks
+OBJS += $(SOURCE)/myTasks.o
 
 # STARTUP FILE
 OBJS += $(CMSIS)/Device/startup_stm32f4xx.o

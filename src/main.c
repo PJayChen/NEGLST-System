@@ -11,7 +11,7 @@
 #include "myio.h"
 
 #include "shell.h"
-
+#include "myTasks.h"
 /*--------------------------------------------------------- */
 
 /* semaphores, queues declarations */
@@ -61,7 +61,8 @@ int main(void)
 	_print("USART initialize finish...\n\r", xSemUSART1send);
 	
 	vUARTCommandConsoleStart( configMINIMAL_STACK_SIZE, tskIDLE_PRIORITY);
-
+    vMyTaskCreate( configMINIMAL_STACK_SIZE, tskIDLE_PRIORITY);
+	
 	vTaskStartScheduler();
 	while(1);
 	return 0;
