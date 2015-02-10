@@ -16,6 +16,7 @@ extern SemaphoreHandle_t xSemUSART1send;
 extern SemaphoreHandle_t xSemUSART2send;
 extern SemaphoreHandle_t xSemUSART3send;
 
+extern SemaphoreHandle_t xMutexGPS;
 
 typedef struct GSP_Data{
     char timeUTC[11]; //hhmmss.sss
