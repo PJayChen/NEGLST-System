@@ -15,6 +15,7 @@
 /* print to USART includes. */
 #include "myio.h"
 
+#include "ShellCommands.h"
 
 /*-----------------------------------------------------------*/
 
