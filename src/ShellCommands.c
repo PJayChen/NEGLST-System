@@ -38,14 +38,16 @@ static BaseType_t prvGetGPSDataCmd( char *pcWriteBuffer, size_t xWriteBufferLen,
     char readChar = '\0';
 
     (void) pcCommandString;
-
-    uprintf("UTC Time: %s\n", GPS.timeUTC);
-    uprintf("Status: %s\n", GPS.status);
-    uprintf("Latitude: %s\n", GPS.latitude);
-    uprintf("Longitude: %s\n", GPS.longitude);
-    uprintf("Date: %s\n", GPS.date);
     
-
+    if(xSemaphoreTake(xMutexGPS, 2 / portTICK_PERIOD_MS) == pdTRUE){
+        uprintf("UTC Time: %s\n", GPS.timeUTC);
+        uprintf("Status: %s\n", GPS.status);
+        uprintf("Latitude: %s\n", GPS.latitude);
+        uprintf("Longitude: %s\n", GPS.longitude);
+        uprintf("Date: %s\n", GPS.date);
+        while(xSemaphoreGive(xMutexGPS) != pdTRUE);
+    }
+    
     return pdFALSE;
 }
 

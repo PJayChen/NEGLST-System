@@ -152,9 +152,10 @@ void vGPSRawDataParsingTask(void *pvParameters)
                 *ptrGPRMC = '\0';
                 //Print the picked out string from GPS module
                 //uprintf("%s\n", strGPRMC);
-                
-                vParsing(&GPS, strGPRMC);
-
+                if(xSemaphoreTake(xMutexGPS, 2 / portTICK_PERIOD_MS) == pdTRUE){
+                    vParsing(&GPS, strGPRMC);
+                    while(xSemaphoreGive(xMutexGPS) != pdTRUE);
+                }
                 //Reset State and string point.
                 GPS_STATE = 0;
                 *strGPRMC = '\0';

@@ -24,6 +24,8 @@ SemaphoreHandle_t xSemUSART2send;
 xQueueHandle xQueueUSART3Recvie;
 SemaphoreHandle_t xSemUSART3send;
 
+SemaphoreHandle_t xMutexGPS;
+
 /* Queue structure used for passing messages. */
 typedef struct {
 	char str[50];
@@ -37,9 +39,7 @@ typedef struct {
 
 
 /* Private functions ---------------------------------------------------------*/
-
-
-int main(void)
+void vCreateQueues(void)
 {
 	/*a queue for tansfer the senddate to USART1 task*/
 	xQueueUART1Recvie = xQueueCreate(15, sizeof(serial_ch_msg));
@@ -55,6 +55,15 @@ int main(void)
 	xQueueUSART3Recvie = xQueueCreate(15, sizeof(serial_ch_msg));
     /*for UASRT2 Tx usage token*/
 	xSemUSART3send = xSemaphoreCreateBinary();
+
+	/*Mutex for read/write GPS data*/
+    xMutexGPS = xSemaphoreCreateMutex();
+    xSemaphoreGive(xMutexGPS);
+}
+
+int main(void)
+{
+	vCreateQueues();
 
 	/* initialize USART hardware... */
 	prvSetupHardware();
