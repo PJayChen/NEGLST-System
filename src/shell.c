@@ -38,6 +38,8 @@ void vUARTCommandConsoleStart( uint16_t usStackSize, UBaseType_t uxPriority )
 					NULL,						/* The parameter is not used, so NULL is passed. */
 					uxPriority,					/* The priority allocated to the task. */
 					NULL );						/* A handle is not required, so just pass NULL. */
+
+	vRegisterSampleCLICommands();
 }
 /*-----------------------------------------------------------*/
 

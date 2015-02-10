@@ -45,13 +45,65 @@ strtok_Zero(char *s, const char delim)
     }
 }
 
+/* Store needed data into struct */
+void vParsing(GPSdata *gps, char *str)
+{
+    int i = 0;
+
+    char *dest;
+
+    dest = strtok_Zero(str, ',');
+
+    while(dest != NULL){
+        
+       /* if(*dest == '\0'){
+            uprintf("0\n");
+        }else{
+            uprintf("%s\n", dest);
+        }*/
+
+        switch(i++){
+            //UTC Time
+            case 0:
+                strcpy(gps->timeUTC, dest);
+                break;
+            case 1:
+                strcpy(gps->status, dest);
+                break;
+            case 2:
+                strcpy(gps->latitude, dest);
+                break;
+            case 3:
+                strncat(gps->latitude, dest, 1);
+                break;
+            case 4:
+                strcpy(gps->longitude, dest);
+                break;
+            case 5:
+                strncat(gps->longitude, dest, 1);
+                break;
+            case 6:
+                strcpy(gps->speed, dest);
+                break;
+            case 7:
+                strcpy(gps->COG, dest);
+                break;
+            case 8:
+                strcpy(gps->date, dest);
+                break;
+            default:;
+        }
+        dest = strtok_Zero(NULL, ',');
+    }
+}
+
+GPSdata GPS;
 void vGPSRawDataParsingTask(void *pvParameters)
 {   
     uint16_t GPS_STATE, GPRMC_STATE;
     char readChar;
     char strGPRMC[80];
     char *ptrGPRMC = strGPRMC;
-    char *dist;
     
     GPS_STATE = 0;
     GPRMC_STATE = 0;
@@ -97,21 +149,13 @@ void vGPSRawDataParsingTask(void *pvParameters)
             //Parsing the $GPRMC String
             case 3:
                 
-
                 *ptrGPRMC = '\0';
-                uprintf("%s\n", strGPRMC);
+                //Print the picked out string from GPS module
+                //uprintf("%s\n", strGPRMC);
                 
-                /*TO-DO: Parsing the strGPRMC*/
-                dist = strtok_Zero(strGPRMC, ',');
-                while(dist != NULL){
-                    if(*dist == '\0')
-                        uprintf("0\n");
-                    else
-                        uprintf("%s\n", dist);
-                    dist = strtok_Zero(NULL, ',');
-                }
-                uprintf("\n\n");
+                vParsing(&GPS, strGPRMC);
 
+                //Reset State and string point.
                 GPS_STATE = 0;
                 *strGPRMC = '\0';
                 ptrGPRMC = strGPRMC;
