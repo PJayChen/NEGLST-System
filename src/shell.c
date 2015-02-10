@@ -96,6 +96,7 @@ void prvUARTCommandConsoleTask( void *pvParameters )
 
 				/* Write the generated string to the UART. */
 				uprintf("%s\n", pcOutputString);
+				*pcOutputString = '\0';
 
 			} while( xReturned != pdFALSE );
 

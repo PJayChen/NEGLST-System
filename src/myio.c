@@ -39,7 +39,7 @@ void _print(char *str, SemaphoreHandle_t SemUSART)
     }
 
 
-    while( xSemaphoreTake(SemUSART,  portMAX_DELAY) == pdFALSE);
+    while( xSemaphoreTake(SemUSART,  2 / portTICK_PERIOD_MS) == pdFALSE);
 
     while(*str){
         if(USART_GetFlagStatus(whichUSART, USART_FLAG_TXE) == SET){
