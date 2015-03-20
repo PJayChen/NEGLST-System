@@ -35,16 +35,21 @@ static const CLI_Command_Definition_t xU3ForwardU1 =
 
 static BaseType_t prvGetGPSDataCmd( char *pcWriteBuffer, size_t xWriteBufferLen, const char *pcCommandString )
 {
-    char readChar = '\0';
-
     (void) pcCommandString;
     
     if(xSemaphoreTake(xMutexGPS, 2 / portTICK_PERIOD_MS) == pdTRUE){
-        uprintf("UTC Time: %s\n", GPS.timeUTC);
-        uprintf("Status: %s\n", GPS.status);
-        uprintf("Latitude: %s\n", GPS.latitude);
-        uprintf("Longitude: %s\n", GPS.longitude);
-        uprintf("Date: %s\n", GPS.date);
+        if(GPS.status[0] == 'V'){
+            uprintf("GPS data not available\n");
+        }else{
+            uprintf("UTC Time: %s\n", GPS.timeUTC);
+            uprintf("Status: %s\n", GPS.status);
+            uprintf("Latitude: %s\n", GPS.latitude);
+            uprintf("Longitude: %s\n", GPS.longitude);
+            uprintf("Speed over Ground: %s\n", GPS.speed);
+            uprintf("Course over Ground %s\n", GPS.COG);
+            uprintf("Date: %s\n", GPS.date);    
+        }
+        
         while(xSemaphoreGive(xMutexGPS) != pdTRUE);
     }
     
