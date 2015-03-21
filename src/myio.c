@@ -17,9 +17,30 @@ extern xQueueHandle xQueueUART1Recvie;
  */
 BaseType_t vSerialGetChar(xQueueHandle xQueueH, char *cReadChar, TickType_t xTicksToWait)
 {
-    while (xQueueReceive(xQueueH, cReadChar, xTicksToWait) == pdFALSE);
+    // while (xQueueReceive(xQueueH, cReadChar, xTicksToWait) == pdFALSE);
 
-    return pdPASS;
+    // return pdPASS;
+    return (xQueueReceive(xQueueH, cReadChar, xTicksToWait));
+}
+
+BaseType_t vSerialGetLine(xQueueHandle xQueueH, char *cReadLine, TickType_t xTicksToWait)
+{
+    char readChar;
+    BaseType_t flag;
+    int i = 0;
+    do{
+        flag = vSerialGetChar(xQueueH, &readChar, xTicksToWait);
+        if(flag == pdTRUE){
+          *cReadLine++ = readChar;  
+        } 
+    }while(readChar != '\n' & readChar != '\r');
+    //\n and \r always appear at sametime.
+    //so we need to clean it.
+    flag = vSerialGetChar(xQueueH, &readChar, xTicksToWait);
+    *cReadLine++ = readChar;
+    *cReadLine = '\0';
+
+    return flag;    
 }
 
 void _print(char *str, SemaphoreHandle_t SemUSART)
