@@ -109,7 +109,7 @@ void vGPSRawDataParsingTask(void *pvParameters)
     GPRMC_STATE = 0;
 
     while(1){
-        vSerialGetChar(xQueueUSART2Recvie, &readChar, 0);
+        while( vSerialGetChar(xQueueUSART2Recvie, &readChar, 0) != pdPASS);
         //uprintf("%c", readChar);
         switch(GPS_STATE){
             //Find $ char
@@ -135,7 +135,7 @@ void vGPSRawDataParsingTask(void *pvParameters)
                         if(readChar == 'C'){
                             GPRMC_STATE = 0;
                             GPS_STATE = 2;
-                            vSerialGetChar(xQueueUSART2Recvie, &readChar, 0);
+                            while( vSerialGetChar(xQueueUSART2Recvie, &readChar, 0) != pdPASS);
                         }
                         break;
                     default:;
