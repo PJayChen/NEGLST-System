@@ -8,6 +8,10 @@
 #include "timers.h"
 #include "queue.h"
 
+#include "string.h"
+#include "String.h"
+#include "myio.h"
+
 extern xQueueHandle xQueueUART1Recvie;
 extern xQueueHandle xQueueUSART2Recvie;
 extern xQueueHandle xQueueUSART3Recvie;

@@ -7,6 +7,9 @@
 #include "semphr.h"
 #include "queue.h"
 
+#include "String.h"
+#include "string.h"
+
 void _print(char *str, SemaphoreHandle_t);
 void qprintf(SemaphoreHandle_t, const char *format, ...);
 void uprintf(const char *format, ...);
