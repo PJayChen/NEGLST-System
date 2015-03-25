@@ -1,5 +1,5 @@
 #include "myTasks.h"
-#include "myio.h"
+
 
 void vMyTaskCreate(uint16_t usStackSize, UBaseType_t uxPriority )
 {
@@ -12,38 +12,6 @@ void vMyTaskCreate(uint16_t usStackSize, UBaseType_t uxPriority )
                     NULL );                     /* A handle is not required, so just pass NULL. */
 }
 
-
-/*Zero(\0) padding strtok*/
-/*This function is the special case of strtok*/
-/*Only support one char delimiter to parsing string*/
-char *
-strtok_Zero(char *s, const char delim)
-{
-    char c;
-    char *tok;
-    static char *last;
-
-    //reload last string address
-    if (s == NULL && (s = last) == NULL)
-        return (NULL);
-
-    tok = s;
-    
-    //find delimiter or end of string '\0'
-    for(c = *s++; ; c = *s++){
-        if((c == delim) || (*s == '\0'))break;
-    }
-
-    if((c != delim) && (*s == '\0')){
-        last = NULL;
-        return tok;
-    }else{
-        //replace comma ',' with '\0'
-        s[-1] = '\0';
-        last = s;
-        return tok;  //return string only with "\0"
-    }
-}
 
 /* Store needed data into struct */
 void vParsing(GPSdata *gps, char *str)

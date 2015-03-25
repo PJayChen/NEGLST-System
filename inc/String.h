@@ -15,7 +15,11 @@ void xtoa(int in_num, char *out_str);
 
 void itoa(int in_num, char *out_str);
 
-char * strncat(char * dst, const char * src, int n);
+// char * strncat(char * dst, const char * src, int n);
 
 size_t strlen(const char *string);
+
+char *
+strtok_Zero(char *, const char );
+
 #endif

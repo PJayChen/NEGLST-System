@@ -68,24 +68,56 @@ size_t strlen(const char *string)
  * Concatenate src on the end of dst.  At most strlen(dst)+n+1 bytes
  * are written at dst (at most n+1 bytes being appended).  Return dst.
  */
-char *
-strncat(char * dst, const char * src, int n)
-{
+// char *
+// strncat(char * dst, const char * src, int n)
+// {
     
-    if (n != 0) {
-        char *d = dst;
-        const char *s = src;
+//     if (n != 0) {
+//         char *d = dst;
+//         const char *s = src;
  
-        while (*d != '\0')
-            d++;
+//         while (*d != '\0')
+//             d++;
         
-        do {
-            if ((*d = *s++) == '\0')
-                break;
-            d++;
-        } while (--n != 0);
+//         do {
+//             if ((*d = *s++) == '\0')
+//                 break;
+//             d++;
+//         } while (--n != 0);
         
-        *d = '\0';
+//         *d = '\0';
+//     }
+//     return (dst);
+// }
+
+/*Zero(\0) padding strtok*/
+/*This function is the special case of strtok*/
+/*Only support one char delimiter to parsing string*/
+char *
+strtok_Zero(char *s, const char delim)
+{
+    char c;
+    char *tok;
+    static char *last;
+
+    //reload last string address
+    if (s == NULL && (s = last) == NULL)
+        return (NULL);
+
+    tok = s;
+    
+    //find delimiter or end of string '\0'
+    for(c = *s++; ; c = *s++){
+        if((c == delim) || (*s == '\0'))break;
     }
-    return (dst);
+
+    if((c != delim) && (*s == '\0')){
+        last = NULL;
+        return tok;
+    }else{
+        //replace comma ',' with '\0'
+        s[-1] = '\0';
+        last = s;
+        return tok;  //return string only with "\0"
+    }
 }
