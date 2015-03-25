@@ -12,6 +12,7 @@ void qprintf(SemaphoreHandle_t, const char *format, ...);
 void uprintf(const char *format, ...);
 
 BaseType_t vSerialGetChar(xQueueHandle, char *, TickType_t);
+BaseType_t vSerialGetLine(xQueueHandle, char *, TickType_t);
 
 #endif
 
