@@ -27,13 +27,14 @@ BaseType_t vSerialGetLine(xQueueHandle xQueueH, char *cReadLine, TickType_t xTic
 {
     char readChar;
     BaseType_t flag;
-    int i = 0;
+
+    cReadLine[0] = '\0';
     do{
         flag = vSerialGetChar(xQueueH, &readChar, xTicksToWait);
         if(flag == pdTRUE){
           *cReadLine++ = readChar;  
         } 
-    }while(readChar != '\n' & readChar != '\r');
+    }while((readChar != '\n') & (readChar != '\r'));
     //\n and \r always appear at sametime.
     //so we need to clean it.
     flag = vSerialGetChar(xQueueH, &readChar, xTicksToWait);
