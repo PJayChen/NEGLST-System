@@ -17,23 +17,23 @@ extern xQueueHandle xQueueUART1Recvie;
  */
 BaseType_t vSerialGetChar(xQueueHandle xQueueH, char *cReadChar, TickType_t xTicksToWait)
 {
-    // while (xQueueReceive(xQueueH, cReadChar, xTicksToWait) == pdFALSE);
-
-    // return pdPASS;
     return (xQueueReceive(xQueueH, cReadChar, xTicksToWait));
 }
 
 BaseType_t vSerialGetLine(xQueueHandle xQueueH, char *cReadLine, TickType_t xTicksToWait)
 {
     char readChar;
-    BaseType_t flag;
+    BaseType_t flag = pdFALSE;
 
     cReadLine[0] = '\0';
     do{
         flag = vSerialGetChar(xQueueH, &readChar, xTicksToWait);
         if(flag == pdTRUE){
           *cReadLine++ = readChar;  
-        } 
+        }else{
+            *cReadLine = '\0';
+            return pdFALSE;
+        }
     }while((readChar != '\n') & (readChar != '\r'));
     //\n and \r always appear at sametime.
     //so we need to clean it.
