@@ -92,6 +92,7 @@ OBJS += $(SOURCE)/shell.o \
 
 #Main Tasks
 OBJS += $(SOURCE)/myTasks.o
+OBJS += $(SOURCE)/comTask.o
 
 # STARTUP FILE
 OBJS += $(CMSIS)/Device/startup_stm32f4xx.o

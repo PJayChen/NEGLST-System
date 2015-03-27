@@ -12,6 +12,7 @@
 
 #include "shell.h"
 #include "myTasks.h"
+#include "comTask.h"
 /*--------------------------------------------------------- */
 
 /* semaphores, queues declarations */
@@ -52,7 +53,7 @@ void vCreateQueues(void)
 	xSemUSART2send = xSemaphoreCreateBinary();
 
 	/*a queue for tansfer the senddate to USART2 task*/
-	xQueueUSART3Recvie = xQueueCreate(15, sizeof(serial_ch_msg));
+	xQueueUSART3Recvie = xQueueCreate(400, sizeof(serial_ch_msg));
     /*for UASRT2 Tx usage token*/
 	xSemUSART3send = xSemaphoreCreateBinary();
 
@@ -72,6 +73,13 @@ int main(void)
 	vUARTCommandConsoleStart( configMINIMAL_STACK_SIZE, tskIDLE_PRIORITY);
     vMyTaskCreate( configMINIMAL_STACK_SIZE, tskIDLE_PRIORITY);
 	
+ 	xTaskCreate(    vBluetoothSPPTask,  /* The task that implements the command console. */
+                    "Bluetooth Task",                      /* Text name assigned to the task.  This is just to assist debugging.  The kernel does not use this name itself. */
+                    configMINIMAL_STACK_SIZE,                /* The size of the stack allocated to the task. */
+                    NULL,                       /* The parameter is not used, so NULL is passed. */
+                    tskIDLE_PRIORITY,                 /* The priority allocated to the task. */
+                    NULL );                     /* A handle is not required, so just pass NULL. */
+
 	vTaskStartScheduler();
 	while(1);
 	return 0;
